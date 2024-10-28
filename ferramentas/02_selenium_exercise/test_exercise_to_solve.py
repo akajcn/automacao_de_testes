@@ -1,35 +1,63 @@
-import random
-import pathlib
 from selenium import webdriver
 from selenium.webdriver.common.by import By
-from time import sleep
+from selenium.webdriver.common.alert import Alert
+from selenium.webdriver.chrome.service import Service
+from webdriver_manager.chrome import ChromeDriverManager
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver import ChromeOptions
+import time
+import pathlib
 
-def test_sample_page():
-    file_path = pathlib.Path(__file__).parent.resolve()
+# Configuração para o navegador Chrome
+navegador = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
+
+def executar_teste_de_pagina():
+    # Abrindo a página HTML local para execução dos testes
+    localizacao_pagina = pathlib.Path(__file__).parent.resolve()
+    navegador.get(f"file:////{localizacao_pagina}/sample-exercise.html")
     options = ChromeOptions()
     options.add_argument("--headless")
     options.add_argument("--no-sandbox")
-    driver = webdriver.Chrome(options=options)
-    driver.get(f"file:////{file_path}/sample-exercise_.html")
-    generate_code(driver)
-    sleep(5)
-    code = driver.find_element(By.ID, "my-value")
-    input = driver.find_element(By.ID, "input")
-    input.clear()
-    input.send_keys(code.text)
-    test_bnt = driver.find_element(By.NAME, "button")
-    test_bnt.click()
 
-    alert = driver.switch_to.alert
-    alert.accept()
+    # Clicando no botão para gerar um código
+    botao_gerar = navegador.find_element(By.NAME, "generate")
+    botao_gerar.click()
 
-    result = driver.find_element(By.ID, "result")
-    assert result.text == f"It workls! {code.text}!"
+    # Espera até que o código gerado esteja visível na tela
+    elemento_codigo = WebDriverWait(navegador, 10).until(
+        EC.visibility_of_element_located((By.ID, "my-value"))
+    )
+    codigo_recebido = elemento_codigo.text
 
-    driver.quit()
+    # Inserindo o código gerado no campo de entrada
+    campo_codigo = navegador.find_element(By.ID, "input")
+    # Limpa o campo antes de inserir o novo código
+    campo_codigo.clear()  
+    campo_codigo.send_keys(codigo_recebido)
+
+    # Clicando no botão para testar o código inserido
+    botao_testar = navegador.find_element(By.NAME, "button")
+    botao_testar.click()
+
+    # Aceitando o alerta "Done!" que aparece após a validação
+    alerta_terminado = Alert(navegador)
+    # Fecha o alerta
+    alerta_terminado.accept()  
+
+    # Obtendo o texto de resultado e comparando com o esperado
+    texto_final = navegador.find_element(By.ID, "result").text
+    mensagem_esperada = f"It workls! {codigo_recebido}!"
+
+    # Validando se o resultado é o esperado
+    print("Teste realizado com sucesso!" if texto_final == mensagem_esperada else "Teste falhou!")
 
 
-def generate_code(driver):
-    generate = driver.find_element(By.NAME, "generate")
-    generate.click()
+# Realizando o teste de geração várias vezes com uma pausa entre eles
+for _ in range(3):
+    executar_teste_de_pagina()
+    # Pausa para evitar a sobreposição dos testes
+    time.sleep(3)  
+
+# Fechando o navegador após a execução dos testes
+navegador.quit()

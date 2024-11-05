@@ -19,7 +19,8 @@ def executar_teste_de_pagina():
     options = ChromeOptions()
     options.add_argument("--headless")
     options.add_argument("--no-sandbox")
-
+    navegador = webdriver.Chrome(options=options)
+    
     # Clicando no botão para gerar um código
     botao_gerar = navegador.find_element(By.NAME, "generate")
     botao_gerar.click()

@@ -10,17 +10,18 @@ import time
 import pathlib
 
 # Configuração para o navegador Chrome
-navegador = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
+# navegador = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
 
 def executar_teste_de_pagina():
     # Abrindo a página HTML local para execução dos testes
     localizacao_pagina = pathlib.Path(__file__).parent.resolve()
-    navegador.get(f"file:////{localizacao_pagina}/sample-exercise.html")
-    options = webdriver.ChromeOptions()
+    options = ChromeOptions()
     options.add_argument("--headless")
     options.add_argument("--no-sandbox")
-    # navegador = webdriver.Chrome(options=options)
-    navegador = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
+    navegador = webdriver.Chrome(options=options)
+    
+    navegador.get(f"file:////{localizacao_pagina}/sample-exercise.html")
+    
 
     # Clicando no botão para gerar um código
     botao_gerar = navegador.find_element(By.NAME, "generate")

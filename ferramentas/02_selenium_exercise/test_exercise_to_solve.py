@@ -16,11 +16,12 @@ def executar_teste_de_pagina():
     # Abrindo a página HTML local para execução dos testes
     localizacao_pagina = pathlib.Path(__file__).parent.resolve()
     navegador.get(f"file:////{localizacao_pagina}/sample-exercise.html")
-    options = ChromeOptions()
+    options = webdriver.ChromeOptions()
     options.add_argument("--headless")
     options.add_argument("--no-sandbox")
-    navegador = webdriver.Chrome(options=options)
-    
+    # navegador = webdriver.Chrome(options=options)
+    navegador = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
+
     # Clicando no botão para gerar um código
     botao_gerar = navegador.find_element(By.NAME, "generate")
     botao_gerar.click()

@@ -11,7 +11,7 @@ import time
 import pathlib
 
 # Configuração para o navegador Chrome
-# navegador = webdriver.Chrome(service=Service(ChromeDriverManager().install()))
+navegador = webdriver.Chrome(service=Service(ChromeDriverManager().install()))
 
 def executar_teste_de_pagina():
     # Abrindo a página HTML local para execução dos testes

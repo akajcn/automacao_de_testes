@@ -6,24 +6,21 @@ from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver import ChromeOptions
+
 import time
 import pathlib
 
 # Configuração para o navegador Chrome
-# navegador = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
+navegador = webdriver.Chrome(service=Service(ChromeDriverManager().install()))
 
 def executar_teste_de_pagina():
     # Abrindo a página HTML local para execução dos testes
-
     localizacao_pagina = pathlib.Path(__file__).parent.resolve()
-    
     options = ChromeOptions()
     options.add_argument("--headless")
     options.add_argument("--no-sandbox")
     navegador = webdriver.Chrome(options=options)
-    
     navegador.get(f"file:////{localizacao_pagina}/sample-exercise.html")
-    
 
     # Clicando no botão para gerar um código
     botao_gerar = navegador.find_element(By.NAME, "generate")

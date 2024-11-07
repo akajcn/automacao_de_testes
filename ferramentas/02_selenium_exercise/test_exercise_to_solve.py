@@ -20,7 +20,8 @@ def executar_teste_de_pagina():
     options.add_argument("--headless")
     options.add_argument("--no-sandbox")
     options.add_argument("--disable-dev-shm-usage")
-    navegador = webdriver.Chrome(options=options)
+    # navegador = webdriver.Chrome(options=options)
+    navegador = webdriver.Chrome(service=Service(ChromeDriverManager().install()))
     navegador.get(f"file:////{localizacao_pagina}/sample-exercise.html")
 
     # Clicando no botão para gerar um código
